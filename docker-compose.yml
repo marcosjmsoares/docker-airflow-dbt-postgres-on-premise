@@ -1,0 +1,136 @@
+services:
+  dbt:
+    build:
+      context: ./dbt
+      dockerfile: Dockerfile
+    volumes:
+      - ./dbt:/dbt
+    environment:
+      - DBT_PROFILES_DIR=/dbt
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    entrypoint: [ "sleep", "infinity" ]
+    networks:
+      - stack-network
+
+  postgres_airflow:
+    image: postgres:17
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${AIRFLOW_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AIRFLOW_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${AIRFLOW_POSTGRES_DB}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${AIRFLOW_POSTGRES_USER} -d ${AIRFLOW_POSTGRES_DB} -h 127.0.0.1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_airflow_data:/var/lib/postgresql/data
+    networks:
+      - stack-network
+
+  airflow-init:
+    build:
+      context: ./airflow
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@${AIRFLOW_POSTGRES_HOST}:${AIRFLOW_POSTGRES_PORT}/${AIRFLOW_POSTGRES_DB}
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET}
+    depends_on:
+      postgres_airflow:
+        condition: service_healthy
+    command: >
+      bash -c "airflow db migrate && airflow users create --username admin --firstname Marcos --lastname Soares --role Admin --email marcos@example.com --password admin123 || true"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+    networks:
+      - stack-network
+
+  airflow-dag-processor:
+    build:
+      context: ./airflow
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@postgres_airflow:5432/${AIRFLOW_POSTGRES_DB}
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET}
+    depends_on:
+      postgres_airflow:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    command: [ "airflow", "dag-processor" ]
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+    networks:
+      - stack-network
+
+  airflow-api-server:
+    build:
+      context: ./airflow
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@${AIRFLOW_POSTGRES_HOST}:${AIRFLOW_POSTGRES_PORT}/${AIRFLOW_POSTGRES_DB}
+      AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET}
+    depends_on:
+      postgres_airflow:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    command: [ "airflow", "api-server" ]
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+    networks:
+      - stack-network
+
+  airflow-scheduler:
+    build:
+      context: ./airflow
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_POSTGRES_USER}:${AIRFLOW_POSTGRES_PASSWORD}@${AIRFLOW_POSTGRES_HOST}:${AIRFLOW_POSTGRES_PORT}/${AIRFLOW_POSTGRES_DB}
+      AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
+      AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET}
+    depends_on:
+      postgres_airflow:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
+    command: [ "airflow", "scheduler" ]
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/plugins:/opt/airflow/plugins
+    networks:
+      - stack-network
+
+volumes:
+  postgres_airflow_data:
+
+networks:
+  stack-network:

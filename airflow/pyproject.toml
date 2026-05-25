@@ -1,0 +1,19 @@
+[project]
+name = "airflow"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Marcos Soares",email = "marcosjmsoares@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<3.15 || >3.15"
+dependencies = [
+    "apache-airflow (>=3.2.1,<4.0.0)"
+]
+
+[tool.poetry]
+packages = [{include = "airflow", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

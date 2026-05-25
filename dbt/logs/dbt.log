@@ -1,0 +1,46 @@
+[0m11:42:39.596008 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000014A41931460>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000014A42B32E10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000014A40DAFDA0>]}
+
+
+============================== 11:42:39.660251 | f396c38f-bc14-44d6-ba2b-2ff454202cd5 ==============================
+[0m11:42:39.660251 [info ] [MainThread]: Running with dbt=1.11.9
+[0m11:42:39.662261 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'profiles_dir': 'C:\\Estudos\\Python\\ambiente_stack_hsrc\\dbt', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'indirect_selection': 'eager', 'invocation_command': 'dbt init projeto_northwind', 'use_colors': 'True', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m11:42:39.810826 [debug] [MainThread]: Starter project path: C:\Estudos\Python\ambiente_stack_hsrc\.venv\Lib\site-packages\dbt\include\starter_project
+[0m11:42:39.838916 [info ] [MainThread]: 
+Your new dbt project "projeto_northwind" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m11:42:39.841919 [info ] [MainThread]: Setting up your profile.
+[0m11:44:14.136768 [info ] [MainThread]: Profile projeto_northwind written to C:\Estudos\Python\ambiente_stack_hsrc\dbt\profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m11:44:14.142770 [debug] [MainThread]: Command `dbt init` succeeded at 11:44:14.142770 after 94.71 seconds
+[0m11:44:14.147963 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000014A42E375F0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000014A42C5D340>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000014A3E968F80>]}
+[0m11:44:14.151313 [debug] [MainThread]: Flushing usage events
+[0m11:44:15.420359 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m15:05:18.140508 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000018339E95880>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001833A46D910>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001833CC9FF80>]}
+
+
+============================== 15:05:18.153027 | 32c7b244-0835-4f4a-a026-1860337e9a1c ==============================
+[0m15:05:18.153027 [info ] [MainThread]: Running with dbt=1.11.9
+[0m15:05:18.156152 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': 'C:\\Estudos\\Python\\ambiente_stack_hsrc\\dbt', 'invocation_command': 'dbt debug', 'indirect_selection': 'eager', 'use_colors': 'True', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m15:05:18.241073 [info ] [MainThread]: dbt version: 1.11.9
+[0m15:05:18.246071 [info ] [MainThread]: python version: 3.12.1
+[0m15:05:18.248069 [info ] [MainThread]: python path: C:\Estudos\Python\ambiente_stack_hsrc\.venv\Scripts\python.exe
+[0m15:05:18.251070 [info ] [MainThread]: os info: Windows-10-10.0.19044-SP0
+[0m15:05:18.280762 [error] [MainThread]: Encountered an error:
+Parsing Error
+  Env var required but not provided: 'POSTGRES_DB'
+[0m15:05:18.284765 [debug] [MainThread]: Command `dbt debug` failed at 15:05:18.283757 after 0.28 seconds
+[0m15:05:18.288895 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001833D150770>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001833E6026C0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000018336C0D250>]}
+[0m15:05:18.293890 [debug] [MainThread]: Flushing usage events
+[0m15:05:19.132158 [debug] [MainThread]: An error was encountered while trying to flush usage events
