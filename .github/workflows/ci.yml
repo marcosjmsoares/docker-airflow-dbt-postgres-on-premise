@@ -34,9 +34,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Create Test .env File
+            - name: Create Test .env File
         run: |
-          cat <<EOF > .env
+          cat > .env <<EOF
           POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB=${{ secrets.POSTGRES_DB }}
@@ -62,6 +62,9 @@ jobs:
           grep '^POSTGRES_HOST=' .env
           grep '^POSTGRES_PORT=' .env
           grep '^DBT_PROFILES_DIR=' .env
+
+      - name: Check POSTGRES_HOST inside dbt container
+        run: docker compose exec -T dbt sh -lc 'printf "POSTGRES_HOST=%s\n" "$POSTGRES_HOST"'
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
