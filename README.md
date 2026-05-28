@@ -129,3 +129,4 @@ Se desejar apagar também os volumes de dados locais persistidos (como o banco d
 ```bash
 docker compose down -v
 ```
+# stack_hsrc
